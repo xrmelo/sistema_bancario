@@ -1,6 +1,6 @@
 def menu():
     menu = """\n
-===== MENU =====
+=====<<< MENU >>>=====
 1 - Depositar
 2 - Sacar
 3 - Extrato
