@@ -2,12 +2,12 @@ import os
 
 def menu():
     menu = """\n
-=====<<< MENU >>>=====
-1 - Depositar
-2 - Sacar
-3 - Extrato
-0 - Sair 
-================
++----- MENU -----+
+! 1 - Depositar  !
+! 2 - Sacar      !
+! 3 - Extrato    !
+! 0 - Sair       !
++----------------+
 """
     print(menu)
     opcao = int(input("Selecione uma opção: "))
@@ -98,5 +98,5 @@ while True:
     elif opcao == 0:
         break
     else:
-        print("Opção inválida")
+        input("Opção inválida presione <Enter> para voltar")
 #------------------------------------------------------------------------------------------------------------------------
