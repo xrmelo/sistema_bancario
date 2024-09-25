@@ -40,14 +40,14 @@ def sacar(saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR):
             input("Limite de saque alcançado, pressione <ENTER> para voltar")  
             break
        
-        valor = float(input("\nInforme o valor para sacar 0 para voltar: "))    
+        valor = float(input("\nInforme o valor para sacar ou 0 para voltar: "))    
           
         if valor == 0: break
         excedeu_saldo = valor > saldo
         excedeu_limite_saque_valor = valor > LIMITE_SAQUE_VALOR
         excedeu_limite_saque_qtd = saque_qtd >= LIMITE_SAQUE_QTD
         if excedeu_saldo:
-            print(f"\nSaldo insuficiente")
+            print(f"\nSaldo insuficiente !!!")
             break
         elif excedeu_limite_saque_valor:
             print(f"Valor do saque excede o limite de R$ {LIMITE_SAQUE_VALOR:.0f}")
