@@ -1,5 +1,6 @@
 import os
 
+#------------------------------------------------------------------------------------------------------------------------
 def menu():
     menu = """\n
 +----- MENU -----+
@@ -13,6 +14,7 @@ def menu():
     opcao = int(input("Selecione uma opção: "))
     return opcao
 #------------------------------------------------------------------------------------------------------------------------
+
 def depositar(saldo,extrato):
     print("\n>>> Depositar")
     
@@ -32,6 +34,7 @@ def depositar(saldo,extrato):
    
     return saldo, extrato
 #------------------------------------------------------------------------------------------------------------------------
+
 def sacar(saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR):
    
     print("\n>> SACAR")
@@ -80,7 +83,6 @@ LIMITE_SAQUE_VALOR = 500
 saldo = 0
 extrato = ""
 saque_qtd = 0
-saque_limite = 0
 while True: 
     os.system('cls')  
     print( "\nSaques/dia...: ",LIMITE_SAQUE_QTD)   
