@@ -1,24 +1,29 @@
+# CONVENÇÕES 
+# Mensagem de falha  usar :  @@@ mensagem...
+# Mensagem de sucesso usar:  ### mensagem...
+
 import os
 from datetime import datetime
+
 
 #------------------------------------------------------------------------------------------------------------------------
 def menu():
     menu = """\n
-+----- MENU -----+
-! 1 - Depositar  !
-! 2 - Sacar      !
-! 3 - Extrato    !
-! 0 - Sair       !
-+----------------+
++------ MENU -------+
+! 1 - Depositar     !
+! 2 - Sacar         !
+! 3 - Extrato       !
+! 4 - Criar Usuario !
+! 0 - Sair          !
++-------------------+
 """
     print(menu)
-    opcao = int(input("Selecione uma opção: "))
+    opcao = int(input("\nSELECIONE UMA OPÇÃO: "))
     return opcao
 #------------------------------------------------------------------------------------------------------------------------
 
-def depositar(saldo,extrato):
-    print("\n>>> Depositar")
-    
+def depositar(saldo,extrato,/):
+    print("\n>>> Depositar")  
     while True:
         valor = float(input("\nInforme o valor do depósito ou 0 para voltar: "))
         if valor == 0:
@@ -27,13 +32,9 @@ def depositar(saldo,extrato):
             saldo += valor
             transacao = f" Depósito\t R$ {valor:.2f}\n"
             extrato = gerar_extrato(transacao,extrato)
-            print(f"\nDeposito de R$ {valor:.2f} realizado com sucesso.\nSeu saldo é R$ {saldo:.2f}")
+            print(f"\n### Deposito de R$ {valor:.2f} realizado com sucesso.\nSeu saldo é R$ {saldo:.2f}")
         else:
             print("\nInforme um valor positivo ou 0 para voltar ")
-        
-    # end while
-    # extrato += f"Deposito: R$ {valor:.2f}\n"
-   
     return saldo, extrato
 #------------------------------------------------------------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ def sacar(*,saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR):
     print("\n>> SACAR")
     while True:
         if saque_qtd == LIMITE_SAQUE_QTD:   
-            input("Limite de saque alcançado, pressione <ENTER> para voltar")  
+            input("@@@ Limite de saque alcançado, pressione <ENTER> para voltar")  
             break
        
         valor = float(input("\nInforme o valor para sacar ou 0 para voltar: "))    
@@ -52,10 +53,10 @@ def sacar(*,saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR):
         excedeu_limite_saque_valor = valor > LIMITE_SAQUE_VALOR
         excedeu_limite_saque_qtd = saque_qtd >= LIMITE_SAQUE_QTD
         if excedeu_saldo:
-            input(f"\nSaldo insuficiente !!! pressione <ENTER> para voltar")
+            input(f"\n@@@ Saldo insuficiente !!! pressione <ENTER> para voltar")
             break
         elif excedeu_limite_saque_valor:
-            print(f"Valor do saque excede o limite de R$ {LIMITE_SAQUE_VALOR:.0f}")
+            print(f"\n@@@ Valor do saque excede o limite de R$ {LIMITE_SAQUE_VALOR:.0f}")
         elif excedeu_limite_saque_qtd:
             print("Número máximo de saques por dia é ",int(LIMITE_SAQUE_QTD))
             input("\nPressione <ENTER> para voltar")
@@ -65,9 +66,9 @@ def sacar(*,saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR):
             saque_qtd +=1
             transacao = f" Saque\t R$ {valor:.2f}\n"
             extrato = gerar_extrato(transacao,extrato)
-            print("\nSaque ",saque_qtd," de ", LIMITE_SAQUE_QTD, "realizado com sucesso !!!")
+            print("\n### Saque ",saque_qtd," de ", LIMITE_SAQUE_QTD, "realizado com sucesso !!!")
         else:
-            print("Operação falhou! O valor informado é inválido.") 
+            print("\n@@@ Operação falhou! O valor informado é inválido.") 
     # end while
     return  saldo, extrato,saque_qtd
 #------------------------------------------------------------------------------------------------------------------------
@@ -79,13 +80,24 @@ def gerar_extrato(transacao,extrato):
 
 #------------------------------------------------------------------------------------------------------------------------
 def imprimir_extrato(saldo,/,*,extrato):
-
     print("\n================ EXTRATO =================")
-    print("Não foram realizadas movimentações." if not extrato else extrato)
+    print("@@@ Não foram realizadas movimentações." if not extrato else extrato)
     print("==========================================")
     print(f"Saldo...: R$ {saldo:.2f}")
     print("==========================================")
     input("Pressione <ENTER> para voltar") 
+#------------------------------------------------------------------------------------------------------------------------
+def criar_usuario():
+    print("\nPOR FAVOR INFORME: ")
+    nome =            input("\nNome completo............................: ")
+    data_nascimento = input("\nData de nascimento dd-mm-aaaa............: ")
+    endereco =        input("\nEndereco - numero - bairro - cidade - UF.: ")
+    return nome, data_nascimento,endereco
+#------------------------------------------------------------------------------------------------------------------------
+def cliente_ja_existe(cpf,usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
 #------------------------------------------------------------------------------------------------------------------------
 #                                                  MAIN
 #------------------------------------------------------------------------------------------------------------------------
@@ -94,6 +106,8 @@ LIMITE_SAQUE_VALOR = 500
 saldo = 0
 extrato = ""
 saque_qtd = 0
+usuarios = []
+contas = []
 while True: 
     os.system('cls')  
     print( "\nSaques/dia...: ",LIMITE_SAQUE_QTD)   
@@ -115,6 +129,14 @@ while True:
     elif opcao == 3:
         #imprimir_extrato(saldo,extrato)
         imprimir_extrato(saldo,extrato=extrato)
+    elif opcao == 4:
+        cpf = input("\nInforme o CPF - somente numeros : ")
+        if cliente_ja_existe(cpf,usuarios):
+            input("\n@@@ Já existe cliente com este CPF pressione <ENTER> para voltar ")
+        else:
+            nome, data_nascimento, endereco = criar_usuario()
+            usuarios.append({"nome":nome,"data_nascimento":data_nascimento,"cpf":cpf,"endereco":endereco})
+            input("\n### Cliente cadastrado com sucesso pressine <ENTER> para voltar")
     elif opcao == 0:
         break
     else:
