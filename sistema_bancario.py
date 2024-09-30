@@ -14,6 +14,8 @@ def menu():
 ! 2 - Sacar         !
 ! 3 - Extrato       !
 ! 4 - Criar Usuario !
+! 5 - Criar Conta   !
+! 6 - Listar Conta  !
 ! 0 - Sair          !
 +-------------------+
 """
@@ -97,26 +99,45 @@ def criar_usuario():
 def cliente_ja_existe(cpf,usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
+#------------------------------------------------------------------------------------------------------------------------
+def criar_conta(cpf,usuarios):
+    usuario = cliente_ja_existe(cpf,usuarios)
+    if usuario:
+        return cpf,usuario
+    return 0,0
+#------------------------------------------------------------------------------------------------------------------------
+def listar_conta(contas):
+    for conta in contas:
+        linha = f"""\
+            Agencia:\t{conta['agencia']}
+            Conta..:\t{conta['conta']}
+            CPF....:\t{conta['cpf']}
+            Titular:\t{conta['usuario']}
 
-#------------------------------------------------------------------------------------------------------------------------
-#                                                  MAIN
-#------------------------------------------------------------------------------------------------------------------------
+            """
+        print("=" * 100)
+        print(linha)
+#-------------------------------------------------- MAIN ----------------------------------------------------------------------
 LIMITE_SAQUE_QTD = 3
 LIMITE_SAQUE_VALOR = 500
+AGENCIA = "0001"
 saldo = 0
 extrato = ""
 saque_qtd = 0
 usuarios = []
 contas = []
+numero_conta = 1
+
 while True: 
     os.system('cls')  
-    print( "\nSaques/dia...: ",LIMITE_SAQUE_QTD)   
-    print(f"\nMáximo/saque.: {LIMITE_SAQUE_VALOR:.2f}") 
-    print(f"\nSeu Saldo é  :R$ {saldo:.2f}")
+    #print( "\nSaques/dia...: ",LIMITE_SAQUE_QTD)   
+    #print(f"\nMáximo/saque.: {LIMITE_SAQUE_VALOR:.2f}") 
+    #print(f"\nSeu Saldo é  :R$ {saldo:.2f}")
    
     opcao = menu()     
     if opcao == 1:
        saldo, extrato = depositar(saldo,extrato)
+
     elif opcao == 2:
         saldo, extrato,saque_qtd = sacar(
             saldo=saldo,
@@ -124,12 +145,12 @@ while True:
             saque_qtd=saque_qtd,
             LIMITE_SAQUE_QTD=LIMITE_SAQUE_QTD,
             LIMITE_SAQUE_VALOR=LIMITE_SAQUE_VALOR 
-        )  
-        #sacar(saldo,extrato,saque_qtd,LIMITE_SAQUE_QTD,LIMITE_SAQUE_VALOR)
+        )
+
     elif opcao == 3:
-        #imprimir_extrato(saldo,extrato)
         imprimir_extrato(saldo,extrato=extrato)
-    elif opcao == 4:
+
+    elif opcao == 4: # Criar usuario
         cpf = input("\nInforme o CPF - somente numeros : ")
         if cliente_ja_existe(cpf,usuarios):
             input("\n@@@ Já existe cliente com este CPF pressione <ENTER> para voltar ")
@@ -137,7 +158,21 @@ while True:
             nome, data_nascimento, endereco = criar_usuario()
             usuarios.append({"nome":nome,"data_nascimento":data_nascimento,"cpf":cpf,"endereco":endereco})
             input("\n### Cliente cadastrado com sucesso pressine <ENTER> para voltar")
+
+    elif opcao == 5: # Criar conta
+        cpf = input("\nInforme o CPF - somente numeros : ")
+        cpf, usuario = criar_conta(cpf,usuarios)
+        if cpf !=0:
+            contas.append({"agencia":AGENCIA,"conta":numero_conta,"cpf":cpf,"usuario":usuario['nome']})
+            numero_conta+=1
+            input("\n### Conta cadastrada com sucesso pressine <ENTER> para voltar")
+        else:
+            input("\n@@@ Cliente não cadastrado com este CPF pressione <ENTER> para voltar ")
+    elif opcao == 6:
+        listar_conta(contas)
+        input("\nPresione <Enter> para voltar")
     elif opcao == 0:
+
         break
     else:
         input("Opção inválida presione <Enter> para voltar")
