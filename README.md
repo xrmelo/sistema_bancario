@@ -1,9 +1,9 @@
 # Sistema Bancário
 Realizado durante o Bootcamp Engenheira de Dados com Python da NTT DATA
 ## Versão 2 - Requisitos
-4 - Criar Usuario
-5 - Criar Conta
-6 - Listar Conta 
+4 - Criar Usuario   
+5 - Criar Conta   
+6 - Listar Conta    
 
 ## Versão 1 - Requisitos
 
